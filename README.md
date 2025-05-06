@@ -1,8 +1,8 @@
-🕹️ Pac-Man per LandTiger 1768
+# 🕹️ Pac-Man per LandTiger 1768
 
 Questo progetto implementa una versione semplificata e interattiva del gioco Pac-Man sulla scheda LandTiger 1768, utilizzando lo schermo LCD, i pulsanti e il joystick della scheda. Il progetto sfrutta l’interazione tra utente e sistema in maniera efficiente, grazie alla gestione dei timer e alla modalità power-down per ridurre il consumo energetico.
-📁 Struttura del Progetto
-Sample.c
+# 📁 Struttura del Progetto
+## Sample.c
 
 In questo file vengono inizializzate e configurate le principali periferiche:
 
@@ -15,7 +15,7 @@ In questo file vengono inizializzate e configurate le principali periferiche:
     Timer RIT e Timer0
 
 Dopo l'inizializzazione, il programma entra in power-down mode, garantendo efficienza energetica e interazione fluida tra utente e sistema.
-Pacman.h
+## Pacman.h
 
 Contiene tutte le dichiarazioni necessarie al funzionamento del gioco:
 
@@ -29,7 +29,7 @@ Contiene tutte le dichiarazioni necessarie al funzionamento del gioco:
 
     Funzioni per la gestione del movimento e delle interazioni
 
-Pacman.c
+## Pacman.c
 
 Gestisce la logica grafica del gioco tramite una matrice (map), con la funzione:
 turnMapIntoPixels()
@@ -61,7 +61,7 @@ updatePacmanPosition()
 
     Aggiorna le variabili di posizione
 
-IRQ_timer.c
+## IRQ_timer.c
 
 Gestisce l’interrupt del Timer0:
 
@@ -77,7 +77,7 @@ Gestisce l’interrupt del Timer0:
 
         Chiama generatePowerPills() per posizionarle correttamente
 
-IRQ_RIT.c
+## IRQ_RIT.c
 
 Gestisce gli input da joystick e i pulsanti:
 
@@ -93,7 +93,7 @@ Gestisce gli input da joystick e i pulsanti:
 
     Gestisce le vite: incrementa il numero quando il punteggio raggiunge 1000 o 2000 punti
 
-🧠 Meccaniche Implementate
+# 🧠 Meccaniche Implementate
 
     Movimento continuo in una direzione, modificabile da joystick
 
@@ -107,10 +107,10 @@ Gestisce gli input da joystick e i pulsanti:
 
     Modalità di pausa iniziale, attivabile/disattivabile con INT0
 
-🎉 Funzionalità Aggiuntiva: Messaggio di Vittoria
+# 🎉 Funzionalità Aggiuntiva: Messaggio di Vittoria
 
 Per rispettare le tempistiche della registrazione video dimostrativa, è stato simulato l'evento di vittoria impostando manualmente a zero il valore della watch relativa alle standardPills in debug, così da visualizzare correttamente il messaggio di vittoria.
-⚙️ Requisiti
+# ⚙️ Requisiti
 
     Scheda LandTiger 1768
 
