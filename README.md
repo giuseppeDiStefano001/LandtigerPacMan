@@ -1,42 +1,119 @@
-# LandtigerPacMan
-In Keil µVision, used the LANDTIGER board to implement a Pac-Man game
+🕹️ Pac-Man per LandTiger 1768
 
-# Pac-Man History 
-Pac-Man, originally known as Puck Man in Japan, is a maze video game developed and released by Namco in 1980. The game was later released in North America by Midway Manufacturing. The inspiration for the Pac-Man character came from a pizza with a slice removed, and the game's characters were designed to be cute and colorful to appeal to younger players. In the game, Pac-Man eats the pills scattered throughout the maze to make points, while avoiding the ghosts that chase him. You can try online Pac-Man 
+Questo progetto implementa una versione semplificata e interattiva del gioco Pac-Man sulla scheda LandTiger 1768, utilizzando lo schermo LCD, i pulsanti e il joystick della scheda. Il progetto sfrutta l’interazione tra utente e sistema in maniera efficiente, grazie alla gestione dei timer e alla modalità power-down per ridurre il consumo energetico.
+📁 Struttura del Progetto
+Sample.c
 
-# How to install
-1) 
+In questo file vengono inizializzate e configurate le principali periferiche:
 
+    Schermo LCD
 
-# Specifications
+    Pulsanti
 
-Use the display of the LandTiger to show the labyrinth for Pac-Man.
-- the labyrinth fits exactly 240 Standard Pills. Please keep the “central” box, as it may be used later.
-- the current Score of the game and the Remaining Lives and a Countdown timer are printed on the landTiger
-- As for the game mechanics I was requested to integrate the following rules:
-Spec. 1) Fill the Labyrinth with 240 Standard Pills.
+    Joystick
 
-Spec. 2) Generate 6 Power pills in random position. These pills replace the Standard Pill in their
-         location. You have to implement the randomness of Power Pills appearance both for the position
-         and time.
-         
-Spec. 3) The player can move Pac-Man through the joystick. Once the direction is chosen (left, right, up, down), Pac-Man continues to go in the specified direction until:
-          a. The player selects a new direction through the joystick.
-          b. Pac-Man encounters a wall, in this case he stops and wait for player input.
--Freely choose Pac-Man speed (just make it “playable”)
+    Timer RIT e Timer0
 
-Spec. 4) When the player reaches the central 'teleport' locations (refer to the figure), Pac-Man exits from one side and re-enters from the other side while maintaining 
-         the original movement direction.
-         
-Spec. 5) Each time Pac-Man goes on top of a Pill, it eats it and the Score counter increase by 10 (Standard Pills) or 50 (Power Pills).
+Dopo l'inizializzazione, il programma entra in power-down mode, garantendo efficienza energetica e interazione fluida tra utente e sistema.
+Pacman.h
 
-Spec. 6) Every 1000 points, Pac-Man earns a new life (from a starting count of 1).
+Contiene tutte le dichiarazioni necessarie al funzionamento del gioco:
 
-Spec. 7) INT0 Pause the game: Place a “PAUSE” message in the middle of the screen and stop Pac-Man movement.
-         Pressing again INT0 resume the game (delete the Pause message and resume movement). The game starts in “PAUSE” mode.
-         
-Spec. 8) The Countdown starts from 60 seconds and count down up to 0.
+    Struttura della mappa di gioco
 
-Spec. 9) Once the player cleans up the labyrinth (by eating all the Pills), Pac-Man stops moving and a 'Victory!' screen is shown.
+    Variabili per posizione di Pac-Man, pillole e power pills
 
-Spec. 10) If the countdown timer expires before all pills have been eaten, a “Game Over!” screen is shown instead.
+    Gestione del punteggio
+
+    Prototipi delle funzioni per il disegno grafico (muri, pillole, Pac-Man)
+
+    Funzioni per la gestione del movimento e delle interazioni
+
+Pacman.c
+
+Gestisce la logica grafica del gioco tramite una matrice (map), con la funzione:
+turnMapIntoPixels()
+
+Scorre la matrice e disegna ogni cella in base al suo valore:
+
+    0: sfondo nero
+
+    1: muri del labirinto (blu)
+
+    2: posizione di Pac-Man
+
+    3: pillola standard (incrementa contatore)
+
+    6: cancello centrale (rosso)
+
+Il movimento di Pac-Man è gestito dalla funzione:
+updatePacmanPosition()
+
+    Pulisce la cella precedente
+
+    Controlla la cella di destinazione:
+
+        Vuota: muove Pac-Man e gestisce il teletrasporto
+
+        Pillola standard: la consuma, aumenta il punteggio
+
+        Power pill: la consuma, aumenta il punteggio
+
+    Aggiorna le variabili di posizione
+
+IRQ_timer.c
+
+Gestisce l’interrupt del Timer0:
+
+    Monitora il tempo di gioco (contatore decrementale)
+
+    Mostra messaggi di "PAUSA" o "GAME OVER"
+
+    Controlla la generazione delle power pills:
+
+        Usa il valore di LPC_TIM0->TC come seme casuale
+
+        Genera nuove power pills quando sono state raccolte un certo numero di pillole standard
+
+        Chiama generatePowerPills() per posizionarle correttamente
+
+IRQ_RIT.c
+
+Gestisce gli input da joystick e i pulsanti:
+
+    Cambia la direzione di Pac-Man solo se la nuova posizione è valida
+
+    Il movimento continua nella stessa direzione finché non c'è un ostacolo o l'utente cambia direzione
+
+    Gestisce il pulsante di pausa (INT0):
+
+        Premuto all’inizio: avvia il gioco
+
+        Premuto durante il gioco: mette in pausa o riprende
+
+    Gestisce le vite: incrementa il numero quando il punteggio raggiunge 1000 o 2000 punti
+
+🧠 Meccaniche Implementate
+
+    Movimento continuo in una direzione, modificabile da joystick
+
+    Raccolta di pillole e incremento del punteggio
+
+    Power pills generate casualmente durante la partita
+
+    Teletrasporto da un’estremità all’altra della mappa
+
+    Messaggi su schermo: "PAUSE", "GAME OVER", e "VICTORY"
+
+    Modalità di pausa iniziale, attivabile/disattivabile con INT0
+
+🎉 Funzionalità Aggiuntiva: Messaggio di Vittoria
+
+Per rispettare le tempistiche della registrazione video dimostrativa, è stato simulato l'evento di vittoria impostando manualmente a zero il valore della watch relativa alle standardPills in debug, così da visualizzare correttamente il messaggio di vittoria.
+⚙️ Requisiti
+
+    Scheda LandTiger 1768
+
+    Ambiente di sviluppo compatibile con la scheda (Keil uVision, ecc.)
+
+    Debugger JTAG o SWD per il caricamento del firmware
